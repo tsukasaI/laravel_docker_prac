@@ -28,6 +28,16 @@ services:
     volumes:
       - ./src:/app
 
+  nuxt:
+    build: ./docker/node
+
+    volumes:
+      - ./frontend:/app
+    tty: true
+
+    ports:
+      - "9000:9000"
+
   db:
     image: mysql:8.0
     container_name: laravel_db
