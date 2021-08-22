@@ -20,6 +20,14 @@ services:
       - ./src:/var/www/html
     working_dir: /var/www/html
 
+  composer:
+    build: ./docker/composer
+    command: >
+      bash -c "composer install && bin/bash"
+    tty: true
+    volumes:
+      - ./src:/app
+
   db:
     image: mysql:8.0
     container_name: laravel_db
