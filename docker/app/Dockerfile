@@ -1,4 +1,4 @@
-FROM php:8.0-apache
+FROM php:8.0-fpm
 
 COPY php.ini /usr/local/etc/php/
 COPY 000-default.conf /etc/apache2/sites-enabled/
@@ -17,6 +17,3 @@ RUN apt-get update \
     libpng-dev \
     libpq-dev \
     && docker-php-ext-install pdo_mysql
-
-RUN mv /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled
-RUN /bin/sh -c a2enmod rewrite
