@@ -16,7 +16,7 @@ services:
   php:
     ports:
       - "80:80"
-    build: ./docker/app
+    build: ./docker/php
     container_name: docker_prac_laravel
     volumes:
       - ./backend:/var/www/html
