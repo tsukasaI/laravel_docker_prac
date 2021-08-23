@@ -23,20 +23,21 @@ services:
   composer:
     build: ./docker/composer
     command: >
-      bash -c "composer install && bin/bash"
+      bash -c "composer install && bash"
     tty: true
     volumes:
       - ./src:/app
 
   nuxt:
-    build: ./docker/node
-
-    volumes:
-      - ./frontend:/app
-    tty: true
-
+    build: ./frontend
     ports:
       - "9000:9000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: sh -c "yarn && yarn dev"
+    tty: true
+    command: sh -c "yarn && yarn dev"
 
   db:
     image: mysql:8.0
