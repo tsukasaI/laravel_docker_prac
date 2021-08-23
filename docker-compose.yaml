@@ -7,17 +7,18 @@ services:
       - "8003:80"
     volumes:
       - ./docker/web/default.conf:/etc/nginx/conf.d/default.conf
-      - ./src/public:/var/www/html/public
+      - ./backend/public:/var/www/html/public
     restart: always
     links:
-      - app
-  app:
+      - php
+
+  php:
     ports:
       - "80:80"
     build: ./docker/app
     container_name: laravel_app
     volumes:
-      - ./src:/var/www/html
+      - ./backend:/var/www/html
     working_dir: /var/www/html
 
   composer:
@@ -26,7 +27,7 @@ services:
       bash -c "composer install && bash"
     tty: true
     volumes:
-      - ./src:/app
+      - ./backend:/app
 
   nuxt:
     build: ./frontend
@@ -37,7 +38,8 @@ services:
       - /app/node_modules
     command: sh -c "yarn && yarn dev"
     tty: true
-    command: sh -c "yarn && yarn dev"
+    links:
+      - web
 
   db:
     image: mysql:8.0
