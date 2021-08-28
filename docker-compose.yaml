@@ -1,37 +1,6 @@
 version: "3.8"
 
 services:
-  web:
-    image: nginx
-    ports:
-      - "8003:80"
-    container_name: docker_prac_php_nginx
-    hostname: web-server
-    volumes:
-      - ./docker/web/default.conf:/etc/nginx/conf.d/default.conf
-      - ./backend/public:/var/www/html/public
-    restart: always
-    links:
-      - php
-
-  php:
-    ports:
-      - "80:80"
-    build: ./docker/php
-    container_name: docker_prac_laravel
-    volumes:
-      - ./backend:/var/www/html
-    working_dir: /var/www/html
-
-  composer:
-    build: ./docker/composer
-    command: >
-      bash -c "composer install && bash"
-    tty: true
-    container_name: docker_prac_composer
-    volumes:
-      - ./backend:/app
-
   nuxt:
     build: ./frontend
     ports:
@@ -42,17 +11,48 @@ services:
       - /app/node_modules
     command: sh -c "yarn && yarn dev"
     tty: true
-    links:
-      - web
 
-  db:
+
+  web:
+    image: nginx
+    ports:
+      - "8003:80"
+    container_name: docker_prac_php_nginx
+    hostname: web-server
+    volumes:
+      - ./docker/web/default.conf:/etc/nginx/conf.d/default.conf
+      - ./backend/public:/var/www/html/public
+    restart: always
+
+
+  php:
+    ports:
+      - "80:80"
+    build: ./docker/php
+    container_name: docker_prac_laravel
+    volumes:
+      - ./backend:/var/www/html
+    working_dir: /var/www/html
+    env_file:
+      - ./backend/.env
+
+  composer:
+    build: ./docker/composer
+    command: >
+      bash -c "composer install && bash"
+    tty: true
+    container_name: docker_prac_composer
+    volumes:
+      - ./backend:/app
+
+  db_local:
     image: mysql:8.0
-    container_name: docker_prac_laravel_db
+    container_name: docker_prac_db
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: laravel_db
-      MYSQL_USER: laravel_user
-      MYSQL_PASSWORD: laravel_pass
+      MYSQL_DATABASE: prac_db
+      MYSQL_USER: prac_user
+      MYSQL_PASSWORD: prac_pass
       TZ: "Asia/Tokyo"
 
     command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
