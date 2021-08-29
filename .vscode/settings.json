@@ -14,5 +14,7 @@
         "HTML (EEx)",
         "HTML (Eex)",
         "plist"
-    ]
+    ],
+
+    "phpsab.standard": "./phpcs/ruleset.xml",
 }
